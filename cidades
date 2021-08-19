@@ -1,0 +1,36 @@
+[code]int n, m, c, k, xx, yy, weight, dist[1001];
+
+struct Priority{
+bool operator () (int a, int b){
+return dist[a] > dist[b]; // attention !
+}
+};
+
+int main(void){
+ios::sync_with_stdio(false);
+while(cin >> n >> m >> c >> k && (n+m+c+k)){
+//n -> cities, m -> roads, c -> destination, k = start
+for(int i = 0; i < n; i++) dist[i] = INF; // set infinity distance
+vector<pair><int, int> > cities[n]; // the graph
+for(int i = 0; i < m; i++){ // fill the graph, not directed graph
+cin >> xx >> yy >> weight;
+cities[xx].push_back(make_pair(weight, yy));
+cities[yy].push_back(make_pair(weight, xx));
+}
+dist[k] = 0; // start path, weight = 0
+priority_queue<int, vector><int>, Priority> q; // to find the best route O(E+V*Log(V))
+q.push(k);
+while(!q.empty()){ // the Dijkstra algorithm
+int x = q.top(); q.pop();
+for(int y = 0; y < cities[x].size(); y++){
+if(dist[x] + cities[x][y].first < dist[cities[x][y].second]) {
+q.push(cities[x][y].second);
+dist[cities[x][y].second] = dist[x] + cities[x][y].first;
+}
+}
+}
+cout << dist[c] << endl;
+}
+return 0;
+}
+[/code
